@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import loginSignupImage from "../assest/login-animation.gif";
 import { BiShow, BiHide } from "react-icons/bi";
 import { Link, useNavigate } from "react-router-dom";
-import { BsEmojiSmileUpsideDown } from "react-icons/bs";
+// import { BsEmojiSmileUpsideDown } from "react-icons/bs";
 import { ImagetoBase64 } from "../utility/ImagetoBase64";
 import { toast } from "react-hot-toast";
 
@@ -37,16 +37,30 @@ const Register = () => {
     });
   };
 
+  //console.log(process.env.REACT_APP_SERVER_URL);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { firstName, email, password, confirmPassword } = data;
     if (firstName && email && password && confirmPassword) {
       if (password === confirmPassword) {
-        // const dataRes = "";
-        // toast(dataRes.message);
-        // if (dataRes.alert) {
-        navigate("/login");
-        //}
+        const fetchData = await fetch(
+          `${process.env.REACT_APP_SERVER_URL}/register`,
+          {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify(data),
+          }
+        );
+
+        const response = await fetchData.json();
+
+        toast(response.message);
+        if (response.alert) {
+          navigate("/login");
+        }
       } else {
         alert("password and confirm password not equal");
       }
@@ -72,6 +86,7 @@ const Register = () => {
           <img
             src={data.image ? data.image : loginSignupImage}
             className="w-full h-full"
+            alt="avatar"
           />
           <label htmlFor="profileImage">
             <div className="absolute bottom-0 h-1/3  bg-slate-500 bg-opacity-50 w-full text-center cursor-pointer">
