@@ -5,8 +5,8 @@ import loginSignupImage from "../assest/login-animation.gif";
 import { BiShow, BiHide } from "react-icons/bi";
 import { BsEmojiSmileUpsideDown } from "react-icons/bs";
 import { Link } from "react-router-dom";
-// import { useDispatch, useSelector } from "react-redux";
-// import { loginRedux } from "../redux/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { loginAction } from "../redux/userSlice";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -15,6 +15,7 @@ const Login = () => {
     password: "",
   });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleShowPassword = () => {
     setShowPassword((preve) => !preve);
@@ -46,10 +47,13 @@ const Login = () => {
       );
 
       const response = await fetchData.json();
-      console.log(response);
+      // console.log(response);
       toast(response.message);
       if (response.alert) {
-        navigate("/");
+        dispatch(loginAction(response));
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
       }
     } else {
       alert("Please Enter required fields");
