@@ -34,6 +34,23 @@ const Login = () => {
     e.preventDefault();
     const { email, password } = data;
     if (email && password) {
+      const fetchData = await fetch(
+        `${process.env.REACT_APP_SERVER_URL}/login`,
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const response = await fetchData.json();
+      console.log(response);
+      toast(response.message);
+      if (response.alert) {
+        navigate("/");
+      }
     } else {
       alert("Please Enter required fields");
     }
@@ -76,7 +93,10 @@ const Login = () => {
             </span>
           </div>
 
-          <button className="w-full max-w-[150px] m-auto  bg-red-500 hover:bg-red-600 cursor-pointer  text-white text-xl font-medium text-center py-1 rounded-full mt-4">
+          <button
+            type="submit"
+            className="w-full max-w-[150px] m-auto  bg-red-500 hover:bg-red-600 cursor-pointer  text-white text-xl font-medium text-center py-1 rounded-full mt-4"
+          >
             Login
           </button>
         </form>
